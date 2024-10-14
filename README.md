@@ -11,10 +11,10 @@ Like the book, this repo book is divided in three main sections:
 .
 ├ README.md
 ├ 1-preliminaries
-│ ├ 11-questions-about-questions.tex
-│ └ 12-experimental-ideal.tex
+│ ├ 1-questions-about-questions.tex
+│ └ 2-experimental-ideal.tex
 ├ 2-core
-│ └ 21-making-regression-make-sense.tex
+│ └ 3-making-regression-make-sense.tex
 └ 3-extensions
 ```
 
