@@ -21,11 +21,11 @@ data may result in inaccurate estimates because of something called
 \textit{selection bias}.
 
 Imagine we were facing the question \textit{Do hospitals have a positive
-effect on people's health?} To answer it, one may be tempted to turn to survey
-data to compare the health status of people who have been hospitalized in the
+effect on people's health?} At first glance, one may be tempted to use survey
+data and compare the health status of people who have been hospitalized in the
 last 12 months and those who have not been hospitalized in the same period.
 
-The NHIS survey ranks the self-reported health status of responders from 1 to 
+The NHIS survey grades the self-reported health status of responders from 1 to 
 5 (the higher the better). Subtracting the mean average health of the
 non-hospitalized group ($3.93$) from that of the hospitalized group ($3.21$)
 results in an estimated value of $-0.72$, which suggests that being
@@ -43,8 +43,8 @@ that:
     \end{cases}
 \end{equation*}.
 
-In the context of our example, $D_i = 1$ would mean that the $i$-th person was
-hospitalized at least once in the last twelve months.
+\noindent In the context of our example, $D_i = 1$ would mean that the $i$-th
+person was hospitalized at least once in the last twelve months.
 
 Any person is either hospitalized or not. Hence, we say that any person has two
 potential health variables:
@@ -58,10 +58,10 @@ potential health variables:
 \end{equation*}.
 
 \noindent A potential outcome is basically what would have happend in a
-parallel reality where the $i$-th person did the opposite of what they did.
+parallel reality where the $i$-th person did the opposite of what we witnessed.
 That is, if $i$ was hospitalized, then $Y_{0i}$ would be that person's observed
 health in a world where they were not hospitalized. We would like to know the
-difference between $Y_{i1}$ and $Y_{i0}$ because it is the causal effect of
+difference between $Y_{1i}$ and $Y_{0i}$ because it is the causal effect of
 going to the hospital for person $i$.
 
 The \textit{observed} outcome can be expressed as:
@@ -76,19 +76,19 @@ group from the hospitalized group can be rewritten as:
 \begin{equation*}
     \begin{split}
         E(Y_i | D_i = 1) - E(Y_i | D_i = 0)
-            & = \, E(Y_{i0} + (Y_{i1} - Y_{i0}) D_i | D_i = 1) \\
-            & \qquad - E(Y_{i0} + (Y_{i1} - Y_{i0}) D_i | D_i = 0) \\
-            & = \, E(Y_{i0} + (Y_{i1} - Y_{i0}) | D_i = 1)
-                - E(Y_{i0} | D_i = 0) \\
-            & = \, E(Y_{i1} - Y_{i0} | D_i = 1)
-            + \big[ E(Y_{i0} | D_i = 1) - E(Y_{i0} | D_i = 0) \big]
+            & = \, E(Y_{0i} + (Y_{1i} - Y_{0i}) D_i | D_i = 1) \\
+            & \qquad - E(Y_{0i} + (Y_{1i} - Y_{0i}) D_i | D_i = 0) \\
+            & = \, E(Y_{0i} + (Y_{1i} - Y_{0i}) | D_i = 1)
+                - E(Y_{0i} | D_i = 0) \\
+            & = \, E(Y_{1i} - Y_{0i} | D_i = 1)
+            + \big[ E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0) \big]
     \end{split}
 \end{equation*}
 
-The term $E(Y_{i1} - Y_{i0} | D_i = 1)$ is the average treatment effect on the
-treated (ATT) because it is the expected value of the health difference on the
+The term $E(Y_{1i} - Y_{0i} | D_i = 1)$ is the Average Treatment Effect on the
+Treated (ATT) because it is the expected value of the health difference on the
 population that was hospitalized. The second term
-$E(Y_{i0} | D_i = 1) - E(Y_{i0} | D_i = 0)$ is the mean health of the
+$E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0)$ is the mean health of the
 hospitalized group in a world where they were not hospitalized minus the mean
 health of the non-hospitalized group in a world where they were not, in fact,
 hospitalized. This term is known as \textit{selection bias}.
@@ -96,30 +96,32 @@ hospitalized. This term is known as \textit{selection bias}.
 It is reasonable to think that people from the non-hospitalized group have
 better health than people from the hospitalized group (because their health is
 so good that they did not need to be hospitalized in the first place). Hence,
-the term $E(Y_{i0} | D_i = 1)$ must be much smaller than $E(Y_{i0} | D_i = 0)$.
+the term $E(Y_{0i} | D_i = 1)$ must be much smaller than $E(Y_{0i} | D_i = 0)$.
 As a result, the selection bias term is negative and it outweighs the ATT,
 which is why the observed difference in means is negative ($-0.72$).
 
 Let us now imagine that we could randomly assign people to be hospitalized,
-whether they need it or not (i.e., imagine we could randomly assign people's
+whether they needed it or not (i.e., imagine we could randomly assign people's
 treatment status). This would imply that $D_i$ would now be random, which is
 useful because the conditional terms in the equation above can now be ignored.
 More specifically, if $D_i$ is randomly assigned, then
-$E(Y_i | D_i = 1) = E(Y_i | D_i = 1) = E(Y_i)$. Therefore, the naive difference
+$E(Y_i | D_i = 0) = E(Y_i | D_i = 1) = E(Y_i)$. Therefore, the naive difference
 in means turns into:
 
 \begin{equation*}
-    E(Y_{i1} - Y_{i0} | D_i = 1)
-        + \big[ E(Y_{i0} | D_i = 1) - E(Y_{i0} | D_i = 0) \big]
-        = \, E(Y_{i1} - Y_{i0}) + \big[ E(Y_{i0}) - E(Y_{i0}) \big]
+    E(Y_{1i} - Y_{0i} | D_i = 1)
+        + \big[ E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0) \big]
+        = \, E(Y_{1i} - Y_{0i}) + \big[ E(Y_{0i}) - E(Y_{0i}) \big]
 \end{equation*}
 
 As we can see, the ATT is now the Average Treatment Effect (ATE) and the
 selection bias term cancels out. In conclusion, randomly assigning the
 treatment allows us to accurately estimate the causal effect of hospitals on
 people's health by calculating a naive comparison of means. In contrast, the
-same estimator yields an inaccurate estimated effect when using
-non-experimental data because the treatment is not randomly assigned.
+same estimator yields an inaccurate estimate when using non-experimental data
+because the treatment is not randomly assigned. This does not mean that
+experimental data is flawless, but it can overcome selection bias when done
+correctly.
 
 % End document 
 \end{document}
