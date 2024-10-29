@@ -1,0 +1,168 @@
+% Imports
+\documentclass[12pt]{article}
+\usepackage[margin=1in]{geometry} 
+\usepackage{
+    amsmath, amsthm, amssymb
+}
+
+% Begin document
+\setlength{\parindent}{0pt}
+\begin{document}
+
+% Title
+\title{Mostly Harmless Econometrics Notes}
+\author{Arturo Soberon}
+\date{}
+\maketitle
+
+% Main
+\setcounter{section}{1}
+\section{The Experimental Ideal}
+This chapter defines what a potential outcome is and shows how non-experimental
+data may result in inaccurate estimates because of something called 
+\textit{selection bias}.
+
+Imagine we were facing the question \textit{Do hospitals have a positive
+effect on people's health?} At first glance, one may be tempted to use survey
+data and compare the health status of people who have been hospitalized in the
+last 12 months and those who have not been hospitalized in the same period.
+
+The NHIS survey grades the self-reported health status of responders from 1 to 
+5 (the higher the better). Subtracting the mean average health of the
+non-hospitalized group ($3.93$) from that of the hospitalized group ($3.21$)
+results in an estimated value of $-0.72$, which suggests that being
+hospitalized negatively impacts people's health. However, this result is
+misleading because of selection bias.
+
+Let $Y_i$ be the $i$-th person's health and $D_i$ their treatment status such
+that
+
+\begin{equation*}
+    D_i = 
+    \begin{cases}
+        0, \text{$i$ is not treated} \\
+        1, \text{$i$ is treated}
+    \end{cases}
+\end{equation*}
+
+In the context of our example, $D_i = 1$ would mean that the $i$-th
+person was hospitalized at least once in the last twelve months.
+
+Any person is either hospitalized or not. Hence, we say that any person has two
+potential health variables
+
+\begin{equation*}
+    \textit{Potential Outcome}_i = 
+    \begin{cases}
+        Y_{0i}, \text{$i$ was not hospitalized} \\
+        Y_{1i}, \text{$i$ was hospitalized}
+    \end{cases}
+\end{equation*}
+
+A potential outcome is basically what would have happend in a
+parallel reality where the $i$-th person did the opposite of what we witnessed.
+That is, if $i$ was hospitalized, then $Y_{0i}$ would be that person's observed
+health in a world where they were not hospitalized. We would like to know the
+difference between $Y_{1i}$ and $Y_{0i}$ because it is the causal effect of
+going to the hospital for person $i$.
+
+The \textit{observed} outcome can be expressed as
+
+\begin{equation*}
+    Y_i = Y_{0i} + (Y_{1i} - Y{0i}) D_i
+\end{equation*}
+
+With this definition, subtracting the average health of the non-hospitalized
+group from the hospitalized group can be rewritten as
+
+\begin{equation*}
+    \begin{split}
+        E(Y_i | D_i = 1) - E(Y_i | D_i = 0)
+            & = \, E(Y_{0i} + (Y_{1i} - Y_{0i}) D_i | D_i = 1) \\
+            & \qquad - E(Y_{0i} + (Y_{1i} - Y_{0i}) D_i | D_i = 0) \\
+            & = \, E(Y_{0i} + (Y_{1i} - Y_{0i}) | D_i = 1)
+                - E(Y_{0i} | D_i = 0) \\
+            & = \, E(Y_{1i} - Y_{0i} | D_i = 1)
+            + \big[ E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0) \big]
+    \end{split}
+\end{equation*}
+
+The term $E(Y_{1i} - Y_{0i} | D_i = 1)$ is the Average Treatment Effect on the
+Treated (ATT) because it is the expected value of the health difference on the
+population that was hospitalized. The second term
+$E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0)$ is the mean health of the
+hospitalized group in a world where they were not hospitalized minus the mean
+health of the non-hospitalized group in a world where they were not, in fact,
+hospitalized. This term is known as \textit{selection bias}.
+
+It is reasonable to think that people from the non-hospitalized group have
+better health than people from the hospitalized group (because their health is
+so good that they did not need to be hospitalized in the first place). Hence,
+the term $E(Y_{0i} | D_i = 1)$ must be much smaller than $E(Y_{0i} | D_i = 0)$.
+As a result, the selection bias term is negative and it outweighs the ATT,
+which is why the observed difference in means is negative ($-0.72$).
+
+Let us now imagine that we could randomly assign people to be hospitalized,
+whether they needed it or not (i.e., imagine we could randomly assign people's
+treatment status). This would imply that $D_i$ would now be random, which is
+useful because the conditional terms in the equation above can now be ignored.
+More specifically, if $D_i$ is randomly assigned, then
+$E(Y_i | D_i = 0) = E(Y_i | D_i = 1) = E(Y_i)$. Therefore, the naive difference
+in means turns into
+
+\begin{equation*}
+    E(Y_{1i} - Y_{0i} | D_i = 1)
+        + \big[ E(Y_{0i} | D_i = 1) - E(Y_{0i} | D_i = 0) \big]
+        = \, E(Y_{1i} - Y_{0i}) + \big[ E(Y_{0i}) - E(Y_{0i}) \big]
+\end{equation*}
+
+As we can see, the ATT is now the Average Treatment Effect (ATE) and the
+selection bias term cancels out. In conclusion, randomly assigning the
+treatment allows us to accurately estimate the causal effect of hospitals on
+people's health by calculating a naive comparison of means. In contrast, the
+same estimator yields an inaccurate estimate when using non-experimental data
+because the treatment is not randomly assigned. This does not mean that
+experimental data is flawless, but it can overcome selection bias when done
+correctly.
+
+Suppose the treatment effect is the same for everyone such that
+$Y_{1i} - Y_{0i} = \rho \, \forall i$ . With constant treatment effects we can
+express the observed outcome as
+
+\begin{equation*}
+    Y_i = \alpha + \rho D_i + \eta_i
+\end{equation*}
+
+Evaluating the conditional expected value of this variable with treatment
+switched on ($D_i = 1$) and off ($D_i = 0$) results in
+
+\begin{align*}
+    & E(Y_i | D_i = 1) = \alpha + \rho + E(\eta_i | D_i = 1) \\
+    & E(Y_i | D_i = 0) = \alpha + E(\eta_i | D_i = 0)
+\end{align*}
+
+The term $\eta_i$ is the stochastic part of the regression, which captures the
+difference between our estimated value $E(Y_i | D_i)$ and $Y_i$. Expressing
+$\eta$ as $Y_{0i} - E(Y_{0i})$ is useful because selection bias comes from
+differences in $Y_{0i}$ between both groups.\footnote{
+    Remember that selection bias equals
+    $E(Y_{0i} | D_i = 0) - E(Y_{0i} | D_i = 1)$. In other words, it captures
+    the difference in the expected outcomes of both groups in a world where
+    neither one receives treatment.
+}
+
+The equivalent form of the naive difference in means using linear regression is
+
+\begin{equation*}
+    E(Y_i | D_i = 1) - E(Y_i | D_i = 0) = \rho + \big[
+        E(\eta_i | D_i = 1) - E(\eta_i | D_i = 0) \big]
+\end{equation*}
+
+which implies that the term in brackets on the RHS represents selection bias.
+When $\eta_i$ is correlated with $D_i$, the expected value of the error term is
+different between both groups. Hence, selection bias amounts to correlation
+between $\eta_i$ and $D_i$. If the two are uncorrelated, the term in brackets
+cancels out.
+
+% End document 
+\end{document}
